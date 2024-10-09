@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import ia_mariocasasdonjuan.gui.MainWindow;
+
 public class MedLocation_MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -46,6 +48,16 @@ public class MedLocation_MainFrame extends JFrame {
 		});
 		btnOutput.setBounds(575, 245, 211, 167);
 		contentPane.add(btnOutput);
+
+		JButton btnBack = new JButton("Regresar");
+        btnBack.setBounds(1050, 20, 100, 30);
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                MainWindow.init();;
+            }
+        });
+        contentPane.add(btnBack);
 	}
 
 }

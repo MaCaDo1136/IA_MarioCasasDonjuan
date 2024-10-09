@@ -61,7 +61,7 @@ public class MainWindow {
 				frame.dispose();
 			}
 		});
-		btnMedRegister.setBounds(185, 222, 156, 127);
+		btnMedRegister.setBounds(150, 200, 200, 100);
 		frame.getContentPane().add(btnMedRegister);
 		
 		JButton btnMedLocation = new JButton("Ubicacion");
@@ -72,7 +72,7 @@ public class MainWindow {
 				frame.dispose();
 			}
 		});
-		btnMedLocation.setBounds(401, 222, 156, 127);
+		btnMedLocation.setBounds(400, 200, 200, 100);
 		frame.getContentPane().add(btnMedLocation);
 		
 		JButton btnMedInventory = new JButton("Inventario");
@@ -83,7 +83,7 @@ public class MainWindow {
 				frame.dispose();
 			}
 		});
-		btnMedInventory.setBounds(657, 222, 156, 127);
+		btnMedInventory.setBounds(650, 200, 200, 100);
 		frame.getContentPane().add(btnMedInventory);
 		
 		JButton medExpData = new JButton("Datos de Expiracion");
@@ -94,7 +94,7 @@ public class MainWindow {
 				frame.dispose();
 			}
 		});
-		medExpData.setBounds(296, 392, 156, 127);
+		medExpData.setBounds(275, 350, 200, 100);
 		frame.getContentPane().add(medExpData);
 		
 		JButton btnMedLogFile = new JButton("Historial de movimientos");
@@ -105,7 +105,7 @@ public class MainWindow {
 				frame.dispose();
 			}
 		});
-		btnMedLogFile.setBounds(530, 392, 156, 127);
+		btnMedLogFile.setBounds(525, 350, 200, 100);
 		frame.getContentPane().add(btnMedLogFile);
 	}
 }

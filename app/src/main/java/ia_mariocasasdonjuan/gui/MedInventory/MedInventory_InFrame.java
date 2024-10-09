@@ -5,6 +5,7 @@ package ia_mariocasasdonjuan.gui.MedInventory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -70,6 +71,17 @@ public class MedInventory_InFrame extends JFrame {
             }
         });
         contentPane.add(btnCancel);
+
+        JButton btnBack = new JButton("Regresar");
+        btnBack.setBounds(1050, 20, 100, 30);
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                MedInventory_MainFrame mainFrame = new MedInventory_MainFrame();
+                mainFrame.setVisible(true);
+            }
+        });
+        contentPane.add(btnBack);
 
         setVisible(true);
     }
