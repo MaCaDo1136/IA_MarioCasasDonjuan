@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 
 public class MedInventory_InFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField txtSelectMed;
     private JTextField txtNewQuantity;

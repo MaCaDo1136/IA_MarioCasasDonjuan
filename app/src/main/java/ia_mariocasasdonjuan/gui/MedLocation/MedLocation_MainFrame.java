@@ -15,7 +15,6 @@ import ia_mariocasasdonjuan.gui.MainWindow;
 
 public class MedLocation_MainFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	public MedLocation_MainFrame() {

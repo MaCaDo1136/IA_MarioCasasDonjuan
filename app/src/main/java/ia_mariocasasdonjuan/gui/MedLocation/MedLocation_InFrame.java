@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 
 public class MedLocation_InFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField txtMedicineSelect;
     private JComboBox<String> cmbActualLocation;

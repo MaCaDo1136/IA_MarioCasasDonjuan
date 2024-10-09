@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 public class MedRegister_InFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
+    
     private JPanel contentPane;
     private JTextField txtBarcode;
     private JTextField txtName;

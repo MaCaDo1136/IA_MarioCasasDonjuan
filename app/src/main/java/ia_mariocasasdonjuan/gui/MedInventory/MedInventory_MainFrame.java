@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 
 public class MedInventory_MainFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	public MedInventory_MainFrame() {
