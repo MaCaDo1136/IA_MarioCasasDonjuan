@@ -70,7 +70,7 @@ public class DatabaseManager {
         try {
             String sql = "DROP TABLE " + tableName;
             connection.createStatement().executeUpdate(sql);
-            System.out.println("Tabla eliminada con exito");
+            // System.out.println("Tabla eliminada con exito");
         } catch(SQLException e) {
             System.err.println(e.getMessage());
         }

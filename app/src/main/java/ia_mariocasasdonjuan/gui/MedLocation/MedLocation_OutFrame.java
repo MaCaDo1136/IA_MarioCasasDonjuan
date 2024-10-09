@@ -5,6 +5,9 @@ package ia_mariocasasdonjuan.gui.MedLocation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import ia_mariocasasdonjuan.gui.MedInventory.MedInventory_MainFrame;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +19,7 @@ public class MedLocation_OutFrame extends JFrame {
 
     public MedLocation_OutFrame() {
 		String results = "Results";
-		
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1330, 856);
         contentPane = new JPanel();
@@ -33,7 +36,8 @@ public class MedLocation_OutFrame extends JFrame {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
-
+				MedInventory_MainFrame mainFrame = new MedInventory_MainFrame();
+                mainFrame.setVisible(true);
             }
         });
 

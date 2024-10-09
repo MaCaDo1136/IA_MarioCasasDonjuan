@@ -6,6 +6,10 @@ package ia_mariocasasdonjuan.gui.MedRegister;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import ia_mariocasasdonjuan.Utils.Variables;
+import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.MedicinesTABLE;
+import ia_mariocasasdonjuan.databaseLib.DataValidator;
 import ia_mariocasasdonjuan.gui.MainWindow;
 
 import java.awt.event.ActionEvent;
@@ -23,6 +27,14 @@ public class MedRegister_InFrame extends JFrame {
     private JTextField txtDescription;
     private JButton btnRegister;
     private JButton btnCancel;
+
+    private String barcode;
+    private String name;
+    private String lote;
+    private String expDate;
+    private String quantity;
+    private String description;
+    private String registerDate;
 
     public MedRegister_InFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,7 +99,7 @@ public class MedRegister_InFrame extends JFrame {
         btnRegister.setBounds(200, 650, 200, 50);
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Register new medicine");
+                
             }
         });
         contentPane.add(btnRegister);
@@ -96,7 +108,26 @@ public class MedRegister_InFrame extends JFrame {
         btnCancel.setBounds(400, 650, 200, 50);
         btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Cancel action");
+                barcode = txtBarcode.getText();
+                name = txtName.getText();
+                lote = txtLote.getText();
+                expDate = txtExpDate.getText();
+                quantity = txtInitQuantity.getText();
+                description = txtDescription.getText();
+                registerDate = Variables.TimeVariables.sDateTime;
+
+                description = description.isEmpty() ? "No description" : description;
+
+                String[] newValue = {name, lote, expDate, quantity, description, registerDate};
+                String refData = "barcode";
+                (DbConnection.db).insertLine(
+                    DbConnection.db,
+                    MedicinesTABLE.tableName,
+                    refData,
+                    DataValidator.formatValue(barcode),
+                    MedicinesTABLE.allColumns,
+                    DataValidator.arrayFormatValue(newValue)
+                );
             }
         });
         contentPane.add(btnCancel);
