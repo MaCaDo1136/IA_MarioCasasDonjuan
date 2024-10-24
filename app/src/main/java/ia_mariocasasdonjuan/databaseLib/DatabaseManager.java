@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Statement;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -375,5 +377,29 @@ public class DatabaseManager {
     /*
      * MedInventory_InFrame Methods
      */
-    
+
+     public List<String> getLotesByBarcode(String barcode) throws SQLException {
+        List<String> lotes = new ArrayList<>();
+        String sql = "SELECT lote FROM Inventory WHERE medicamentId = " + getMedIdWithBarcode(barcode) + " AND quantity > 0";
+
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) {
+            lotes.add(rs.getString("lote"));
+        }
+        return lotes;
+    }
+
+    public String getQuantityByBarcodeAndLote(String barcode, String lote) throws SQLException {
+        String sql = "SELECT quantity FROM Inventory WHERE medicamentId = " + getMedIdWithBarcode(barcode) + " AND lote = " + lote;
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        if (rs.next()) {
+            return rs.getString("quantity");
+        }
+        return null;
+    }
+
+    public void updateQuantity(String barcode, String lote, String newQuantity) throws SQLException {
+        String sql = "UPDATE Inventory SET quantity = " + newQuantity + " WHERE medicamentId = " + getMedIdWithBarcode(barcode) + " AND lote = " + lote;
+        connection.createStatement().executeUpdate(sql);
+    }
 }
