@@ -82,7 +82,7 @@ public class MedExpData_OutFrame extends JFrame {
 
 	//Ventana emergente
 
-    private void showResults(String medicineName, String estimatedDate) {
+    private void showResults(String medicineName, String estimatedDate) {   
         String results = "Resultados de búsqueda:\n" +
                 "Medicamento: " + medicineName + "\n" +
                 "Fecha estimada: " + estimatedDate;

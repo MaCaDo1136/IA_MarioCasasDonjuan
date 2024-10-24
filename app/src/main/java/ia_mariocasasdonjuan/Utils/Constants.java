@@ -23,13 +23,41 @@ public class Constants {
     public static class MedicinesTABLE {
         public static final String tableName = "Medicines";
         public static final String[] allColumns = {
-            "barcode",
             "name",
             "lote",
             "expDate",
             "quantity",
+            "location",
             "description",
-            "registerDate"
+            "registerDate"  
+        };
+    }
+
+    public static class MovementsTABLE {
+        public static final String tableName = "Movements";
+        public static final String[] allColumns = {
+            "medicamentId",
+            "movementType",
+            "movementQuantity",
+            "movementDate",
+        };
+    }
+
+    public static class LocationTABLE {
+        public static final String tableName = "Location";
+        public static final String[] allColumns = {
+            "medicamentId",
+            "actualLocation",
+            "movementDate"
+        };
+    }
+
+    public static class InventoryTABLE {
+        public static final String tableName = "Inventory";
+        public static final String[] allColumns = {
+            "medicamentId",
+            "actualQuantity",
+            "modificationDate"
         };
     }
 }

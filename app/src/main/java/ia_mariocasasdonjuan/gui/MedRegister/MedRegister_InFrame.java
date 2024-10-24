@@ -6,14 +6,12 @@ package ia_mariocasasdonjuan.gui.MedRegister;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.Utils.Variables;
 import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
-import ia_mariocasasdonjuan.Utils.Constants.MedicinesTABLE;
-import ia_mariocasasdonjuan.databaseLib.DataValidator;
 import ia_mariocasasdonjuan.gui.MainWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class MedRegister_InFrame extends JFrame {
 
@@ -24,6 +22,7 @@ public class MedRegister_InFrame extends JFrame {
     private JTextField txtLote;
     private JTextField txtExpDate;
     private JTextField txtInitQuantity;
+    private JTextField txtLocation;
     private JTextField txtDescription;
     private JButton btnRegister;
     private JButton btnCancel;
@@ -33,8 +32,8 @@ public class MedRegister_InFrame extends JFrame {
     private String lote;
     private String expDate;
     private String quantity;
+    private String location;
     private String description;
-    private String registerDate;
 
     public MedRegister_InFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +68,6 @@ public class MedRegister_InFrame extends JFrame {
         txtLote.setBounds(200, 250, 400, 50);
         contentPane.add(txtLote);
 
-        // Expiration Date label and text field
         JLabel lblExpDate = new JLabel("Expiration Date:");
         lblExpDate.setBounds(67, 350, 150, 50);
         contentPane.add(lblExpDate);
@@ -78,7 +76,7 @@ public class MedRegister_InFrame extends JFrame {
         txtExpDate.setBounds(200, 350, 400, 50);
         contentPane.add(txtExpDate);
 
-        JLabel lblInitQuantity = new JLabel("Initial Quantity:");
+        JLabel lblInitQuantity = new JLabel("Quantity:");
         lblInitQuantity.setBounds(67, 450, 150, 50);
         contentPane.add(lblInitQuantity);
 
@@ -86,48 +84,65 @@ public class MedRegister_InFrame extends JFrame {
         txtInitQuantity.setBounds(200, 450, 400, 50);
         contentPane.add(txtInitQuantity);
 
+        JLabel lblLocation = new JLabel("Location:");
+        lblLocation.setBounds(67, 550, 150, 50);
+        contentPane.add(lblLocation);
+
+        txtLocation = new JTextField();
+        txtLocation.setBounds(200, 550, 400, 50);
+        contentPane.add(txtLocation);
+
         JLabel lblDescription = new JLabel("Description:");
-        lblDescription.setBounds(67, 550, 150, 50);
+        lblDescription.setBounds(67, 650, 150, 50);
         contentPane.add(lblDescription);
 
         txtDescription = new JTextField();
-        txtDescription.setBounds(200, 550, 400, 50);
+        txtDescription.setBounds(200, 650, 400, 50);
         contentPane.add(txtDescription);
 
         //Actions
         btnRegister = new JButton("Register");
-        btnRegister.setBounds(200, 650, 200, 50);
+        btnRegister.setBounds(200, 726, 200, 50);
         btnRegister.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });
-        contentPane.add(btnRegister);
-
-        btnCancel = new JButton("Cancel");
-        btnCancel.setBounds(400, 650, 200, 50);
-        btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 barcode = txtBarcode.getText();
                 name = txtName.getText();
                 lote = txtLote.getText();
                 expDate = txtExpDate.getText();
                 quantity = txtInitQuantity.getText();
+                location = txtLocation.getText();
                 description = txtDescription.getText();
-                registerDate = Variables.TimeVariables.sDateTime;
 
-                description = description.isEmpty() ? "No description" : description;
+                try {
+                    if (DbConnection.db.checkIfMedicineExists_Medicines(barcode)) {
+                        if (barcode.isEmpty()|| lote.isEmpty() || expDate.isEmpty() || quantity.isEmpty() || location.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please fill all the fields");
+                            return;
+                        } else {
+                            DbConnection.db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
+                            JOptionPane.showMessageDialog(null, "Inventory updated successfully");
+                        }
+                    } else {
+                        if (barcode.isEmpty() || name.isEmpty() || lote.isEmpty() || expDate.isEmpty() || quantity.isEmpty() || location.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please fill all the fields");
+                            return;
+                        } else {
+                            DbConnection.db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
+                            JOptionPane.showMessageDialog(null, "Medicine registered successfully");
+                        }
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        contentPane.add(btnRegister);
 
-                String[] newValue = {name, lote, expDate, quantity, description, registerDate};
-                String refData = "barcode";
-                (DbConnection.db).insertLine(
-                    DbConnection.db,
-                    MedicinesTABLE.tableName,
-                    refData,
-                    DataValidator.formatValue(barcode),
-                    MedicinesTABLE.allColumns,
-                    DataValidator.arrayFormatValue(newValue)
-                );
+        btnCancel = new JButton("Cancel");
+        btnCancel.setBounds(400, 726, 200, 50);
+        btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
             }
         });
         contentPane.add(btnCancel);

@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import ia_mariocasasdonjuan.Utils.Variables;
+
 public class DatabaseManager {
 
     private Connection connection;
@@ -25,7 +27,6 @@ public class DatabaseManager {
     public DatabaseManager(String url, String user, String password) {
         try {
             connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Conexion exitosa a la base de datos.");
         } catch (SQLException e) {  
             System.err.println(e.getMessage());
         }
@@ -39,7 +40,6 @@ public class DatabaseManager {
         try {
             if (connection != null) {
                 connection.close();
-                System.out.println("Conexion cerrada correctamente.");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -76,7 +76,7 @@ public class DatabaseManager {
         }
     }
 
-    public void selectTable(String tableName) {
+    public void selectTable(String tableName) { //specific for an agenda (modificable)
         try {
             String sql = "SELECT * FROM " + tableName;
             ResultSet rs = connection.createStatement().executeQuery(sql);
@@ -209,7 +209,7 @@ public class DatabaseManager {
 
     //Advanced Dates Manager
 
-    public void addDate(String titulo, String descripcion, LocalDate fecha, LocalTime hora) {
+    public void addDate(String titulo, String descripcion, LocalDate fecha, LocalTime hora) { //specific for an agenda (modificable)
         String sql = "INSERT INTO citas (titulo, descripcion, fecha, hora) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -223,7 +223,7 @@ public class DatabaseManager {
         }
     }
 
-    public void showAllDates(String tableName) {
+    public void showAllDates(String tableName) { //specific for an agenda (modificable)
         try {
             String sql = "SELECT * FROM " + tableName;
             ResultSet rs = connection.createStatement().executeQuery(sql);
@@ -246,7 +246,7 @@ public class DatabaseManager {
         }
     }
 
-    public void updateDate(int id, String titulo, String descripcion, LocalDate fecha, LocalTime hora) {
+    public void updateDate(int id, String titulo, String descripcion, LocalDate fecha, LocalTime hora) { //specific for an agenda (modificable)
         String sql = "UPDATE citas SET titulo = ?, descripcion = ?, fecha = ?, hora = ? WHERE id = ?";
     
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -271,4 +271,109 @@ public class DatabaseManager {
         }
     }
 
+    //medWarehouse Advanced Manager
+
+    /*
+     * RegisterFrame Main Method
+     */
+    public void registerOrUpdateMedicine(String barcode, String name, String lote, String expDate, String quantity, String location, String description) throws SQLException {
+        String sql = "SELECT id FROM Medicines WHERE barcode = " + barcode;
+        ResultSet rs = connection.createStatement().executeQuery(sql); 
+
+        if (rs.next()) {
+            updateInventory(getMedIdWithBarcode(barcode), lote, expDate, quantity);
+            updateLocation(getInventoryIdWithMedId(getMedIdWithBarcode(barcode), lote, expDate, quantity), location, quantity);
+        } else {
+            registerMedicine(barcode, name, description);
+            updateInventory(getMedIdWithBarcode(barcode), lote, expDate, quantity);
+            updateLocation(getInventoryIdWithMedId(getMedIdWithBarcode(barcode), lote, expDate, quantity), location, quantity);
+        }
+    }
+
+    //dependencies
+    private void registerMedicine(String barcode, String name, String description) throws SQLException {
+        String sql = "INSERT INTO Medicines (barcode, name, description) VALUES (?, ?, ?)";
+        PreparedStatement insertStmt = getConnection().prepareStatement(sql);
+        insertStmt.setString(1, barcode);
+        insertStmt.setString(2, name);
+        insertStmt.setString(3, description);
+        insertStmt.executeUpdate();
+
+        int medicamentId = getMedIdWithBarcode(barcode);
+        registerMovement(medicamentId, "Registro", 0);
+    }
+
+    private void registerMovement(int inventoryId, String movementType, int movementQuantity) throws SQLException {
+        String sql = "INSERT INTO Movements (inventoryId, movementType, movementQuantity, movementDate) VALUES (?, ?, ?, ?)";
+        PreparedStatement insertMovementStmt = getConnection().prepareStatement(sql);
+        insertMovementStmt.setInt(1, inventoryId);
+        insertMovementStmt.setString(2, movementType);
+        insertMovementStmt.setInt(3, movementQuantity);
+        insertMovementStmt.setString(4, Variables.TimeVariables.sDateTime);
+        insertMovementStmt.executeUpdate();
+    }
+
+    private void updateInventory(int medicamentId, String lote, String expDate, String actualQuantity) throws SQLException { //NECESITO CORREGIR ESTO
+            String sql = "INSERT INTO Inventory (medicamentId, lote, expDate, quantity) VALUES (?, ?, ?, ?)";
+            PreparedStatement updateInventoryStmt = connection.prepareStatement(sql);
+            int quantity = Integer.parseInt(actualQuantity);
+            int loteI = Integer.parseInt(lote);
+            updateInventoryStmt.setInt(1, medicamentId);
+            updateInventoryStmt.setInt(2, loteI);
+            updateInventoryStmt.setString(3, expDate);
+            updateInventoryStmt.setInt(4, quantity);
+            updateInventoryStmt.executeUpdate();
+
+            registerMovement(medicamentId, "Ingreso", quantity);
+    }
+
+    private void updateLocation(int inventoryId, String actualLocation, String quantity) throws SQLException {
+        String sql = "INSERT INTO Locations (inventoryId, actualLocation) VALUES (?, ?)";
+        PreparedStatement insertLocationStmt = connection.prepareStatement(sql);
+        insertLocationStmt.setInt(1, inventoryId);
+        insertLocationStmt.setString(2, actualLocation);
+        insertLocationStmt.executeUpdate();
+
+        int movementQuantity = Integer.parseInt(quantity);
+
+        registerMovement(inventoryId, "Cambio de Ubicación", movementQuantity);
+    }
+
+    private int getMedIdWithBarcode(String barcode) throws SQLException {
+        barcode = DataValidator.formatValue(barcode);
+        String sql = "SELECT id FROM Medicines WHERE barcode = " + barcode;
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+        return -1;
+    }
+
+    private int getInventoryIdWithMedId(int medicamentId, String lote, String expDate, String quantity) throws SQLException {
+        lote = DataValidator.formatValue(lote);
+        expDate = DataValidator.formatValue(expDate);
+        String sql = "SELECT id FROM Inventory WHERE medicamentId = " + medicamentId + " AND lote = " + lote + " AND expDate = " + expDate + " AND quantity = " + quantity;
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+        return -1;
+    }
+
+    public boolean checkIfMedicineExists_Medicines(String barcode) throws SQLException {
+        String sql = "SELECT id FROM Medicines WHERE barcode = " + barcode;
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        return rs.next();
+    }
+
+    public boolean checkIfMedicineExists_Inventory(int medicamentId) throws SQLException {
+        String sql = "SELECT id FROM Inventory WHERE medicamentId = " + medicamentId;
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        return rs.next();
+    }
+
+    /*
+     * MedInventory_InFrame Methods
+     */
+    
 }

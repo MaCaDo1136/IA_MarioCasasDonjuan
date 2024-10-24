@@ -36,7 +36,7 @@ public class MedInventory_InFrame extends JFrame {
         contentPane.add(txtNewQuantity);
 
         lblActualQuantity = new JLabel("Actual quantity: ");
-        lblActualQuantity.setBounds(200, 450, 87, 50);
+        lblActualQuantity.setBounds(200, 450, 143, 50);
         contentPane.add(lblActualQuantity);
         
         JLabel lblSelectMed = new JLabel("Select Med:");
