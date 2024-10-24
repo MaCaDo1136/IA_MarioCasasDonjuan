@@ -402,4 +402,55 @@ public class DatabaseManager {
         String sql = "UPDATE Inventory SET quantity = " + newQuantity + " WHERE medicamentId = " + getMedIdWithBarcode(barcode) + " AND lote = " + lote;
         connection.createStatement().executeUpdate(sql);
     }
+
+    /*
+     * MedInventory_OutFrame Methods
+     */
+
+     public List<MedInventoryData> getInventory() throws SQLException {
+        List<MedInventoryData> inventoryDataList = new ArrayList<>();
+        String sql = "SELECT m.name, i.lote, i.expDate, i.quantity " +
+                     "FROM Medicines m " +
+                     "JOIN Inventory i ON m.id = i.medicamentId " +
+                     "WHERE i.quantity > 0";
+    
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) {
+            String name = rs.getString("name");
+            String lote = rs.getString("lote");
+            String expDate = rs.getString("expDate");
+            int quantity = rs.getInt("quantity");
+    
+            inventoryDataList.add(new MedInventoryData(name, lote, expDate, quantity));
+        }
+        return inventoryDataList;
+    }
+
+    public class MedInventoryData {
+        private String name;
+        private String lote;
+        private String expDate;
+        private int quantity;
+    
+        public MedInventoryData(String name, String lote, String expDate, int quantity) {
+            this.name = name;
+            this.lote = lote;
+            this.expDate = expDate;
+            this.quantity = quantity;
+        }
+    
+        public String getName() { 
+            return name; 
+        }
+        public String getLote() { 
+            return lote; 
+        }
+        public String getExpDate() { 
+            return expDate; 
+        }
+        public int getQuantity() { 
+            return quantity; 
+        }
+    }
+    
 }
