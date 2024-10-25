@@ -452,5 +452,25 @@ public class DatabaseManager {
             return quantity; 
         }
     }
+
+    /*
+     * MedLocation_InFrame Methods
+     */
+
+     public List<String> getMedicineNames() {           //NO ME SIRVE (LO MAS SEGURO)
+        List<String> medicineNames = new ArrayList<>();
+        String sql = "SELECT name FROM medicines";
+        try {
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+        
+            while (rs.next()) {
+                medicineNames.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return medicineNames;
+    }
+    
     
 }
