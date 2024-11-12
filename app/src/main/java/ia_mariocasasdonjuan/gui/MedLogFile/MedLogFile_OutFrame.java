@@ -5,71 +5,127 @@ package ia_mariocasasdonjuan.gui.MedLogFile;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedLogFileData;
 import ia_mariocasasdonjuan.gui.MainWindow;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MedLogFile_OutFrame extends JFrame {
+private JPanel contentPane;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private List<MedLogFileData> logFileDataList;
 
-    private JPanel contentPane;
-    private JTextField txtEstimatedDate;
-    private JButton btnSearch;
-    private JButton btnCancel;
-    private JTextArea txtResults;
+    private int pageSize = 70;
+    private int currentPage = 1;
+    private JLabel lblPageInfo;
 
     public MedLogFile_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1330, 856);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(null);
-        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout());
 
-        JLabel lblEstimatedDate = new JLabel("Estimated Date:");
-        lblEstimatedDate.setBounds(67, 50, 150, 50);
-        contentPane.add(lblEstimatedDate);
+        String[] columnNames = {"id de Inventario", "Tipo de movimiento", "Cantidad", "Fecha"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+        table.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(table);
+        contentPane.add(scrollPane, BorderLayout.CENTER);
 
-        txtEstimatedDate = new JTextField();
-        txtEstimatedDate.setBounds(200, 50, 400, 50);
-        contentPane.add(txtEstimatedDate);
+        JPanel buttonPanel = new JPanel(new BorderLayout());
 
-        //Actions
-        btnSearch = new JButton("Search");
-        btnSearch.setBounds(200, 150, 200, 50);
-        btnSearch.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Search for movements on date: " + txtEstimatedDate.getText());
-            }
-        });
-        contentPane.add(btnSearch);
+        JPanel paginationPanel = new JPanel();
+        JButton btnPrevious = new JButton("Anterior");
+        JButton btnNext = new JButton("Siguiente");
+        paginationPanel.add(btnPrevious);
+        paginationPanel.add(btnNext);
 
-        btnCancel = new JButton("Cancel");
-        btnCancel.setBounds(400, 150, 200, 50);
-        btnCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });
-        contentPane.add(btnCancel);
+        lblPageInfo = new JLabel();
+        paginationPanel.add(lblPageInfo);
+        buttonPanel.add(paginationPanel, BorderLayout.CENTER);
 
         JButton btnBack = new JButton("Regresar");
-        btnBack.setBounds(1050, 20, 100, 30);
+        buttonPanel.add(btnBack, BorderLayout.EAST);
+
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
+        setContentPane(contentPane);
+
+        //ACTION LISTENERS
+
+        btnPrevious.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateTable();
+                    updatePageInfo();
+                }
+            }
+        });
+
+        btnNext.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (currentPage < getTotalPages()) {
+                    currentPage++;
+                    updateTable();
+                    updatePageInfo();
+                }
+            }
+        });
+
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                MainWindow.init();;
+                MainWindow.init();
             }
         });
-        contentPane.add(btnBack);
 
-        // Results area
-        txtResults = new JTextArea();
-        txtResults.setBounds(67, 250, 1200, 500);
-        txtResults.setEditable(false);
-        contentPane.add(txtResults);
+        loadData();
+    }
 
-        setVisible(true);
+    //Private methods
+
+    private void loadData() {
+        try {
+            logFileDataList = DbConnection.db.getMedLogFile();
+            currentPage = 1;
+            updateTable();
+            updatePageInfo();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateTable() {
+        tableModel.setRowCount(0);
+        int start = (currentPage - 1) * pageSize;
+        int end = Math.min(start + pageSize, logFileDataList.size());
+
+        for (int i = start; i < end; i++) {
+            MedLogFileData logFile = logFileDataList.get(i);
+            Object[] rowData = {
+                logFile.getInventoryId(),
+                logFile.getMovementType(),
+                logFile.getMovementQuantity(),
+                logFile.getDate()
+            };
+            tableModel.addRow(rowData);
+        }
+    }
+
+    private void updatePageInfo() {
+        lblPageInfo.setText("Página " + currentPage + " de " + getTotalPages());
+    }
+
+    private int getTotalPages() {
+        return (int) Math.ceil((double) logFileDataList.size() / pageSize);
     }
 }

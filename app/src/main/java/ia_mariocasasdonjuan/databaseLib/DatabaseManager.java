@@ -380,11 +380,19 @@ public class DatabaseManager {
 
      public List<String> getLotesByBarcode(String barcode) throws SQLException {
         List<String> lotes = new ArrayList<>();
-        String sql = "SELECT lote FROM Inventory WHERE medicamentId = " + getMedIdWithBarcode(barcode) + " AND quantity > 0";
+        int medicamentId = getMedIdWithBarcode(barcode);
 
-        ResultSet rs = connection.createStatement().executeQuery(sql);
-        while (rs.next()) {
-            lotes.add(rs.getString("lote"));
+        if (medicamentId != -1) {
+            String sql = "SELECT lote FROM Inventory WHERE medicamentId = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, medicamentId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                lotes.add(rs.getString("lote"));
+            }
+            rs.close();
+            pstmt.close();
         }
         return lotes;
     }
@@ -457,20 +465,214 @@ public class DatabaseManager {
      * MedLocation_InFrame Methods
      */
 
-     public List<String> getMedicineNames() {           //NO ME SIRVE (LO MAS SEGURO)
+     public List<String> getMedicineNames(String searchString) {
         List<String> medicineNames = new ArrayList<>();
-        String sql = "SELECT name FROM medicines";
+        String sql = "SELECT name FROM medicines WHERE name LIKE '" + searchString + "%'";
         try {
-            ResultSet rs = connection.createStatement().executeQuery(sql);
-        
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 medicineNames.add(rs.getString("name"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         return medicineNames;
     }
+
+    public List<String> getMedicineLocationsWithLots(String medicine) {
+        List<String> locationsWithLots = new ArrayList<>();
+        String query = "SELECT L.actualLocation, I.lote FROM Locations L JOIN Inventory I ON L.inventoryId = I.id JOIN Medicines M ON I.medicamentId = M.id WHERE M.name = " + DataValidator.formatValue(medicine);
     
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String locationWithLot = rs.getString("actualLocation") + " - " + rs.getString("lote");
+                locationsWithLots.add(locationWithLot);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return locationsWithLots;
+    }
+
+    /*
+     * MedLocation_OutFrame Methods
+     */
+
+     public List<MedLocationData> getMedLocation() throws SQLException {
+        List<MedLocationData> locationDataList = new ArrayList<>();
+        String sql = "SELECT m.name, i.lote, i.expDate, i.quantity, l.actualLocation " +
+                    "FROM Medicines m " +
+                    "JOIN Inventory i ON m.id = i.medicamentId " +
+                    "JOIN Locations l ON i.id = l.inventoryId " +
+                    "WHERE i.quantity > 0";
+    
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) {
+            String name = rs.getString("name");
+            String lote = rs.getString("lote");
+            String expDate = rs.getString("expDate");
+            int quantity = rs.getInt("quantity");
+            String actualLocation = rs.getString("actualLocation");
+
+            locationDataList.add(new MedLocationData(name, lote, expDate, quantity, actualLocation));
+        }
+        return locationDataList;
+        }
+
+    public class MedLocationData {
+        private String name;
+        private String lote;
+        private String expDate;
+        private int quantity;
+        private String actualLocation;
+
+        public MedLocationData(String name, String lote, String expDate, int quantity, String actualLocation) {
+            this.name = name;
+            this.lote = lote;
+            this.expDate = expDate;
+            this.quantity = quantity;
+            this.actualLocation = actualLocation;
+        }
+    
+        public String getName() { 
+            return name; 
+        }
+        public String getLote() { 
+            return lote; 
+        }
+        public String getExpDate() { 
+            return expDate; 
+        }
+        public int getQuantity() { 
+            return quantity; 
+        }
+        public String getActualLocation() { 
+            return actualLocation; 
+        }
+    }
+
+    
+    /*
+     * MedLogFile_OutFrame Methods
+     */
+
+     public List<MedLogFileData> getMedLogFile() throws SQLException {
+        List<MedLogFileData> logFileDataList = new ArrayList<>();
+        String sql = "SELECT* FROM Movements";
+    
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) {
+            String inventoryId = rs.getString("inventoryId");
+            String movementType = rs.getString("movementType");
+            String date = rs.getString("movementDate");
+            int movementQuantity = rs.getInt("movementQuantity");
+    
+            logFileDataList.add(new MedLogFileData(inventoryId, movementType, movementQuantity, date));
+        }
+        return logFileDataList;
+    }
+
+    public class MedLogFileData {
+        private String inventoryId;
+        private String movementType;
+        private int movementQuantity;
+        private String date;
+    
+        public MedLogFileData(String inventoryId, String movementType, int movementQuantity, String date) {
+            this.inventoryId = inventoryId;
+            this.movementType = movementType;
+            this.movementQuantity = movementQuantity;
+            this.date = date;
+        }
+    
+        public String getInventoryId() { 
+            return inventoryId; 
+        }
+        public String getMovementType() { 
+            return movementType; 
+        }
+        public int getMovementQuantity() { 
+            return movementQuantity; 
+        }
+        public String getDate() { 
+            return date; 
+        }
+    }
+
+    /*
+     * MedExpData_OutFrame Methods
+     */
+
+     public List<MedExpData> getMedicineDataByName(String medicineName) {
+        List<MedExpData> medicineDataList = new ArrayList<>();
+        String query = "SELECT m.name, i.lote, i.expDate, i.quantity, l.actualLocation " +
+               "FROM Medicines m " +
+               "JOIN Inventory i ON m.id = i.medicamentId " +
+               "JOIN Locations l ON i.id = l.inventoryId " +
+               "WHERE m.name = ? AND i.quantity > 0 " +
+               "ORDER BY STR_TO_DATE(CONCAT('01-', " +
+               "  CASE " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Ene' THEN 'Jan' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Feb' THEN 'Feb' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Mar' THEN 'Mar' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Abr' THEN 'Apr' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'May' THEN 'May' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Jun' THEN 'Jun' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Jul' THEN 'Jul' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Ago' THEN 'Aug' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Sep' THEN 'Sep' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Oct' THEN 'Oct' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Nov' THEN 'Nov' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Dic' THEN 'Dec' " +
+               "  END, '-', SUBSTRING(i.expDate, 5, 2)) , '%d-%b-%y') ASC";
+
+
+
+    
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, medicineName);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String lote = rs.getString("lote");
+                String expDate = rs.getString("expDate");
+                int quantity = rs.getInt("quantity");
+                String location = rs.getString("actualLocation");
+    
+                medicineDataList.add(new MedExpData(name, lote, expDate, quantity, location));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return medicineDataList;
+    }
+    
+    
+    public class MedExpData {
+        private String name;
+        private String lote;
+        private String expDate;
+        private int quantity;
+        private String location;
+    
+        public MedExpData(String name, String lote, String expDate, int quantity, String location) {
+            this.name = name;
+            this.lote = lote;
+            this.expDate = expDate;
+            this.quantity = quantity;
+            this.location = location;
+        }
+    
+        public String getName() { return name; }
+        public String getLote() { return lote; }
+        public String getExpDate() { return expDate; }
+        public int getQuantity() { return quantity; }
+        public String getLocation() { return location; }
+    }
     
 }

@@ -20,7 +20,7 @@ public class MedInventory_OutFrame extends JFrame {
     private DefaultTableModel tableModel;
     private List<MedInventoryData> inventoryDataList;
 
-    private int pageSize = 10;
+    private int pageSize = 70;
     private int currentPage = 1;
     private JLabel lblPageInfo;
 
