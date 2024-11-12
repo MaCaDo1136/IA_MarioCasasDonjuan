@@ -97,6 +97,7 @@ public class MedLocation_InFrame extends JFrame {
                 txtMedicineSelect.setText("");
                 cmbActualLocation.removeAllItems();
                 txtNewLocation.setText("");
+                revalidate();
                 repaint();
             }
         });

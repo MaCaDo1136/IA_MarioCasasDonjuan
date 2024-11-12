@@ -484,7 +484,8 @@ public class DatabaseManager {
         List<String> locationsWithLots = new ArrayList<>();
         String query = "SELECT L.actualLocation, I.lote FROM Locations L JOIN Inventory I ON L.inventoryId = I.id JOIN Medicines M ON I.medicamentId = M.id WHERE M.name = " + DataValidator.formatValue(medicine);
     
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 String locationWithLot = rs.getString("actualLocation") + " - " + rs.getString("lote");
                 locationsWithLots.add(locationWithLot);

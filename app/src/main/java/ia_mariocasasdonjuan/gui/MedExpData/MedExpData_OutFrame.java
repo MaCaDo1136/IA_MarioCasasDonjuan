@@ -5,6 +5,8 @@ package ia_mariocasasdonjuan.gui.MedExpData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
 import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedExpData;
@@ -25,6 +27,8 @@ public class MedExpData_OutFrame extends JFrame {
     private int currentPage = 1;
     private DefaultTableModel tableModel;
     private List<MedExpData> medicineData;
+    private JPopupMenu popupMenu;
+    private Timer timer;
 
     public MedExpData_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +45,30 @@ public class MedExpData_OutFrame extends JFrame {
         txtMedicineName = new JTextField();
         txtMedicineName.setBounds(200, 50, 400, 50);
         contentPane.add(txtMedicineName);
+
+        popupMenu = new JPopupMenu();
+        contentPane.add(popupMenu);
+
+        // timer
+        timer = new Timer(300, (ActionEvent e) -> triggerSuggestionUpdate());
+        timer.setRepeats(false);
+
+        txtMedicineName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                timer.restart();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                timer.restart();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                timer.restart();
+            }
+        });
 
         btnSearch = new JButton("Search");
         btnSearch.setBounds(200, 150, 200, 50);
@@ -170,5 +198,54 @@ public class MedExpData_OutFrame extends JFrame {
     // Método para calcular el total de páginas
     private int getTotalPages() {
         return (int) Math.ceil((double) medicineData.size() / pageSize);
+    }
+
+    private void triggerSuggestionUpdate() {
+        String searchString = txtMedicineName.getText();
+        if (!searchString.isEmpty()) {
+            new SwingWorker<List<String>, Void>() {
+                protected List<String> doInBackground() {
+                    return DbConnection.db.getMedicineNames(searchString);
+                }
+
+                protected void done() {
+                    try {
+                        List<String> suggestions = get();
+                        showSuggestions(suggestions);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.execute();
+        } else {
+            popupMenu.setVisible(false);
+        }
+    }
+
+    private void showSuggestions(List<String> suggestions) {
+        if (popupMenu.getComponentCount() == suggestions.size()) {
+            boolean same = true;
+            for (int i = 0; i < suggestions.size(); i++) {
+                if (!((JMenuItem) popupMenu.getComponent(i)).getText().equals(suggestions.get(i))) {
+                    same = false;
+                    break;
+                }
+            }
+            if (same) return;
+        }
+
+        popupMenu.removeAll();
+
+        for (String suggestion : suggestions) {
+            JMenuItem item = new JMenuItem(suggestion);
+            item.addActionListener(e -> txtMedicineName.setText(suggestion));
+            popupMenu.add(item);
+        }
+
+        if (!suggestions.isEmpty()) {
+            popupMenu.show(txtMedicineName, 0, txtMedicineName.getHeight());
+        } else {
+            popupMenu.setVisible(false);
+        }
     }
 }
