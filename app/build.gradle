@@ -7,14 +7,13 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.mysql:mysql-connector-j:8.4.0'  // MySQL
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
     implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'com.mysql:mysql-connector-j:8.4.0'
-
 }
 
 application {
-    mainClass = 'ia_mariocasasdonjuan.App'
+    mainClass = 'ia_mariocasasdonjuan.App'  // Clase principal Java
 }
 
 tasks.named('test') {
