@@ -497,6 +497,20 @@ public class DatabaseManager {
         return locationsWithLots;
     }
 
+    public void updateMedicineLocation(String selectedMedicine, String selectedLocation, String newLocation) { //ESTA MAL, NO JALA
+        String sql = "UPDATE Locations SET actualLocation = ? WHERE actualLocation = ? AND inventoryId = ";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, newLocation);
+            pstmt.setString(2, selectedLocation);
+            pstmt.setString(3, selectedMedicine);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /*
      * MedLocation_OutFrame Methods
      */
@@ -615,18 +629,18 @@ public class DatabaseManager {
                "WHERE m.name = ? AND i.quantity > 0 " +
                "ORDER BY STR_TO_DATE(CONCAT('01-', " +
                "  CASE " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Ene' THEN 'Jan' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Feb' THEN 'Feb' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Mar' THEN 'Mar' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Abr' THEN 'Apr' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'May' THEN 'May' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Jun' THEN 'Jun' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Jul' THEN 'Jul' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Ago' THEN 'Aug' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Sep' THEN 'Sep' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Oct' THEN 'Oct' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Nov' THEN 'Nov' " +
-               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'Dic' THEN 'Dec' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'ene' THEN 'Jan' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'feb' THEN 'Feb' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'mar' THEN 'Mar' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'abr' THEN 'Apr' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'may' THEN 'May' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'jun' THEN 'Jun' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'jul' THEN 'Jul' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'ago' THEN 'Aug' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'sep' THEN 'Sep' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'oct' THEN 'Oct' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'nov' THEN 'Nov' " +
+               "    WHEN SUBSTRING(i.expDate, 1, 3) = 'dic' THEN 'Dec' " +
                "  END, '-', SUBSTRING(i.expDate, 5, 2)) , '%d-%b-%y') ASC";
 
 

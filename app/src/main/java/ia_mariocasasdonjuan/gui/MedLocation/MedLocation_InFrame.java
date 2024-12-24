@@ -85,7 +85,22 @@ public class MedLocation_InFrame extends JFrame {
         btnUpdate.setBounds(200, 450, 180, 50);
         btnUpdate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String selectedMedicine = txtMedicineSelect.getText();
+                String selectedLocation = (String) cmbActualLocation.getSelectedItem();
+                String newLocation = txtNewLocation.getText();
 
+                if (selectedMedicine.isEmpty() || selectedLocation == null || newLocation.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill all fields.");
+                    return;
+                }
+
+                DbConnection.db.updateMedicineLocation(selectedMedicine, selectedLocation, newLocation);
+                JOptionPane.showMessageDialog(null, "Medicine location updated successfully.");
+                txtMedicineSelect.setText("");
+                cmbActualLocation.removeAllItems();
+                txtNewLocation.setText("");
+                revalidate();
+                repaint();
             }
         });
         contentPane.add(btnUpdate);

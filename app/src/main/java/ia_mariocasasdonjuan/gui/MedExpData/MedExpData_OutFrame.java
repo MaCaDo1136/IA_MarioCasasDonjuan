@@ -74,7 +74,7 @@ public class MedExpData_OutFrame extends JFrame {
         btnSearch.setBounds(200, 150, 200, 50);
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String medicineName = txtMedicineName.getText();
+                String medicineName = txtMedicineName.getText().toLowerCase();
                 if (medicineName.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a medicine name.");
                 } else {
@@ -89,6 +89,8 @@ public class MedExpData_OutFrame extends JFrame {
         btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 txtMedicineName.setText("");
+                revalidate();
+                repaint();
             }
         });
         contentPane.add(btnCancel);
