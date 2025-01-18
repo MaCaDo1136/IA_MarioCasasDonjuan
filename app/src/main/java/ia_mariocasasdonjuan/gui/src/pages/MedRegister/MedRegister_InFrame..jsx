@@ -1,33 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios";
+import "../../styles/MedRegister_InFrame.css";
+import axios from "axios"; // Si utilizas axios para la comunicación con el backend
 
-const MedRegister_InFrame = () => {
+const MedRegister = () => {
   // Estado para los campos del formulario
-  const [data, setData] = useState({
-    barcode: "",
-    name: "",
-    lote: "",
-    expDate: "",
-    quantity: "",
-    location: "",
-    description: "",
-  });
+  const [barcode, setBarcode] = useState("");
+  const [name, setName] = useState("");
+  const [lote, setLote] = useState("");
+  const [expDate, setExpDate] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
 
-  // Función para manejar los cambios en los inputs
-  const handleChange = (e) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Función para manejar el registro y actualización
+  // Función para manejar el registro
   const handleRegister = async () => {
-    const { barcode, name, lote, expDate, quantity, location, description } =
-      data;
-
-    // Verifica si todos los campos están completos
-    if (!barcode || !lote || !expDate || !quantity || !location || !name) {
+    if (!barcode || !name || !lote || !expDate || !quantity || !location) {
       alert("Please fill all the fields");
       return;
     }
@@ -62,7 +49,7 @@ const MedRegister_InFrame = () => {
         alert("Medicine registered successfully");
       }
     } catch (error) {
-      console.error("Error en la solicitud:", error);
+      console.error(error);
       alert("Error connecting to the database");
     }
   };
@@ -74,57 +61,50 @@ const MedRegister_InFrame = () => {
       <label>Barcode:</label>
       <input
         type="text"
-        name="barcode"
-        value={data.barcode}
-        onChange={handleChange}
+        value={barcode}
+        onChange={(e) => setBarcode(e.target.value)}
       />
 
       <label>Name:</label>
       <input
         type="text"
-        name="name"
-        value={data.name}
-        onChange={handleChange}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
 
       <label>Lote:</label>
       <input
         type="text"
-        name="lote"
-        value={data.lote}
-        onChange={handleChange}
+        value={lote}
+        onChange={(e) => setLote(e.target.value)}
       />
 
       <label>Expiration Date:</label>
       <input
         type="text"
-        name="expDate"
-        value={data.expDate}
-        onChange={handleChange}
+        value={expDate}
+        onChange={(e) => setExpDate(e.target.value)}
       />
 
       <label>Quantity:</label>
       <input
         type="text"
-        name="quantity"
-        value={data.quantity}
-        onChange={handleChange}
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
       />
 
       <label>Location:</label>
       <input
         type="text"
-        name="location"
-        value={data.location}
-        onChange={handleChange}
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
       />
 
       <label>Description:</label>
       <input
         type="text"
-        name="description"
-        value={data.description}
-        onChange={handleChange}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
       />
 
       <div className="buttons">
@@ -135,4 +115,4 @@ const MedRegister_InFrame = () => {
   );
 };
 
-export default MedRegister_InFrame;
+export default MedRegister;

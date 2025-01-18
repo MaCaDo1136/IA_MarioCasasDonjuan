@@ -44,3 +44,18 @@
 .med-register-container button:hover {
   background-color: #0056b3;
 }
+
+.med-register-container input:invalid {
+  border: 1px solid red;
+}
+
+@media (max-width: 768px) {
+  .med-register-container {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .med-register-container button {
+    padding: 0.5rem 1rem;
+  }
+}

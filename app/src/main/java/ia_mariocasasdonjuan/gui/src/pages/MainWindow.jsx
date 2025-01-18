@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/MainWindow.css";
 import LogoSantaMariaReina from "../assets/images/LogoSantaMariaReina.jpg";
-
+import "./MedInventory/MedInventory_MainFrame.jsx";
 import "./MedRegister/MedRegister_InFrame..jsx";
 
 const MainWindow = () => {
@@ -17,9 +17,9 @@ const MainWindow = () => {
         {/* <Link to="/med-location"> */}
         <button className="primary">Ubicación</button>
         {/* </Link> */}
-        {/* <Link to="/med-inventory"> */}
-        <button className="primary">Inventario</button>
-        {/* </Link> */}
+        <Link to="/med-inventory">
+          <button className="primary">Inventario</button>
+        </Link>
         {/* <Link to="/med-expiration"> */}
         <button className="secondary">Datos de Expiración</button>
         {/* </Link> */}

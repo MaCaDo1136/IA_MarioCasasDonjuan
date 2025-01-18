@@ -1,0 +1,58 @@
+/*
+Written by: Mario Casas
+ */
+.med-inventory-main-container {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.med-inventory-main-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 2rem;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column; /* Si los botones deben estar apilados */
+  gap: 10px; /* Espacio entre botones */
+  align-items: center; /* Centra los botones */
+}
+
+.primary {
+  background-color: #007bff; /* Color de fondo para el botón de Input */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.menu-button {
+  background-color: #28a745; /* Color de fondo para el botón Output */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-button {
+  background-color: #dc3545; /* Color de fondo para el botón Back */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
