@@ -8,7 +8,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
 import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedExpData;
 import ia_mariocasasdonjuan.gui.MainWindow;
 
@@ -29,6 +31,12 @@ public class MedExpData_OutFrame extends JFrame {
     private List<MedExpData> medicineData;
     private JPopupMenu popupMenu;
     private Timer timer;
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedExpData_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,6 +108,7 @@ public class MedExpData_OutFrame extends JFrame {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                db.libCloseConnection();
                 MainWindow.init();
             }
         });
@@ -109,7 +118,7 @@ public class MedExpData_OutFrame extends JFrame {
     }
 
     private void showResults(String medicineName) {
-        medicineData = DbConnection.db.getMedicineDataByName(medicineName);
+        medicineData = db.getMedicineDataByName(medicineName);
 
         if (medicineData.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No data found for this medicine.");
@@ -179,9 +188,11 @@ public class MedExpData_OutFrame extends JFrame {
         tableModel.setRowCount(0);
         int start = (currentPage - 1) * pageSize;
         int end = Math.min(start + pageSize, medicineData.size());
-
+        boolean existence;
         for (int i = start; i < end; i++) {
             MedExpData data = medicineData.get(i);
+            existence = data.getQuantity() > 0;
+            if (existence) {
             Object[] rowData = {
                 data.getName(),
                 data.getLote(),
@@ -190,6 +201,7 @@ public class MedExpData_OutFrame extends JFrame {
                 data.getLocation()
             };
             tableModel.addRow(rowData);
+            }
         }
     }
 
@@ -207,7 +219,7 @@ public class MedExpData_OutFrame extends JFrame {
         if (!searchString.isEmpty()) {
             new SwingWorker<List<String>, Void>() {
                 protected List<String> doInBackground() {
-                    return DbConnection.db.getMedicineNames(searchString);
+                    return db.getMedicineNames(searchString);
                 }
 
                 protected void done() {

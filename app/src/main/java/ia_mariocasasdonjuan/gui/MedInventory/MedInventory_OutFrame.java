@@ -4,7 +4,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
 import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedInventoryData;
 
 import java.sql.SQLException;
@@ -23,6 +24,12 @@ public class MedInventory_OutFrame extends JFrame {
     private int pageSize = 70;
     private int currentPage = 1;
     private JLabel lblPageInfo;
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedInventory_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +88,7 @@ public class MedInventory_OutFrame extends JFrame {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                db.libCloseConnection();
                 MedInventory_MainFrame mainFrame = new MedInventory_MainFrame();
                 mainFrame.setVisible(true);
             }
@@ -93,7 +101,7 @@ public class MedInventory_OutFrame extends JFrame {
 
     private void loadData() {
         try {
-            inventoryDataList = DbConnection.db.getInventory();
+            inventoryDataList = db.getInventory();
             currentPage = 1;
             updateTable();
             updatePageInfo();

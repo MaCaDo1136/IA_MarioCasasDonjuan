@@ -6,7 +6,8 @@ package ia_mariocasasdonjuan.gui.MedRegister;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
 import ia_mariocasasdonjuan.gui.MainWindow;
 
 import java.awt.event.ActionEvent;
@@ -34,6 +35,12 @@ public class MedRegister_InFrame extends JFrame {
     private String quantity;
     private String location;
     private String description;
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedRegister_InFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,12 +121,12 @@ public class MedRegister_InFrame extends JFrame {
                 description = txtDescription.getText();
 
                 try {
-                    if (DbConnection.db.checkIfMedicineExists_Medicines(barcode)) {
+                    if (db.checkIfMedicineExists_Medicines(barcode)) {
                         if (barcode.isEmpty()|| lote.isEmpty() || expDate.isEmpty() || quantity.isEmpty() || location.isEmpty()) {
                             JOptionPane.showMessageDialog(null, "Please fill all the fields");
                             return;
                         } else {
-                            DbConnection.db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
+                            db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
                             JOptionPane.showMessageDialog(null, "Inventory updated successfully");
                         }
                     } else {
@@ -127,7 +134,7 @@ public class MedRegister_InFrame extends JFrame {
                             JOptionPane.showMessageDialog(null, "Please fill all the fields");
                             return;
                         } else {
-                            DbConnection.db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
+                            db.registerOrUpdateMedicine(barcode, name, lote, expDate, quantity, location, description);
                             JOptionPane.showMessageDialog(null, "Medicine registered successfully");
                         }
                     }
@@ -152,6 +159,7 @@ public class MedRegister_InFrame extends JFrame {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                db.libCloseConnection();
                 MainWindow.init();;
             }
         });

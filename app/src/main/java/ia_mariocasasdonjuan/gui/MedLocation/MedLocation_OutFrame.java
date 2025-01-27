@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
 import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedLocationData;
 
 import java.sql.SQLException;
@@ -25,6 +26,12 @@ private JPanel contentPane;
     private int pageSize = 70;
     private int currentPage = 1;
     private JLabel lblPageInfo;
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedLocation_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,6 +90,7 @@ private JPanel contentPane;
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                db.libCloseConnection();
                 MedLocation_MainFrame mainFrame = new MedLocation_MainFrame();
                 mainFrame.setVisible(true);
             }
@@ -95,7 +103,7 @@ private JPanel contentPane;
 
     private void loadData() {
         try {
-            locationDataList = DbConnection.db.getMedLocation();
+            locationDataList = db.getMedLocation();
             currentPage = 1;
             updateTable();
             updatePageInfo();

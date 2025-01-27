@@ -8,7 +8,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -24,6 +26,12 @@ public class MedLocation_InFrame extends JFrame {
     private JButton btnSearch;
     private JPopupMenu popupMenu;
     private Timer timer;
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedLocation_InFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,7 +102,7 @@ public class MedLocation_InFrame extends JFrame {
                     return;
                 }
 
-                DbConnection.db.updateMedicineLocation(selectedMedicine, selectedLocation, newLocation);
+                db.updateMedicineLocation(selectedMedicine, selectedLocation, newLocation);
                 JOptionPane.showMessageDialog(null, "Medicine location updated successfully.");
                 txtMedicineSelect.setText("");
                 cmbActualLocation.removeAllItems();
@@ -130,7 +138,7 @@ public class MedLocation_InFrame extends JFrame {
 
                 cmbActualLocation.removeAllItems();
 
-                List<String> locationsWithLots = DbConnection.db.getMedicineLocationsWithLots(selectedMedicine);
+                List<String> locationsWithLots = db.getMedicineLocationsWithLots(selectedMedicine);
         
                 for (String locationWithLot : locationsWithLots) {
                     cmbActualLocation.addItem(locationWithLot);
@@ -144,6 +152,7 @@ public class MedLocation_InFrame extends JFrame {
         btnBack.setBounds(1050, 20, 100, 30);
         btnBack.addActionListener(e -> {
             dispose();
+            db.libCloseConnection();
             MedLocation_MainFrame mainFrame = new MedLocation_MainFrame();
             mainFrame.setVisible(true);
         });
@@ -157,7 +166,7 @@ public class MedLocation_InFrame extends JFrame {
         if (!searchString.isEmpty()) {
             new SwingWorker<List<String>, Void>() {
                 protected List<String> doInBackground() {
-                    return DbConnection.db.getMedicineNames(searchString);
+                    return db.getMedicineNames(searchString);
                 }
 
                 protected void done() {

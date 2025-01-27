@@ -38,7 +38,7 @@ public class DatabaseManager {
         return connection;
     }
 
-    public void closeConnection() {
+    public void libCloseConnection() {
         try {
             if (connection != null) {
                 connection.close();

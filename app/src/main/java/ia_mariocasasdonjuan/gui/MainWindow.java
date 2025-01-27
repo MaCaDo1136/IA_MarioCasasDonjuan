@@ -6,7 +6,6 @@ package ia_mariocasasdonjuan.gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-
 import ia_mariocasasdonjuan.gui.MedExpData.MedExpData_OutFrame;
 import ia_mariocasasdonjuan.gui.MedInventory.MedInventory_MainFrame;
 import ia_mariocasasdonjuan.gui.MedLocation.MedLocation_MainFrame;

@@ -6,7 +6,8 @@ package ia_mariocasasdonjuan.gui.MedInventory;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.Utils.Constants.DbConnection;
+import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
+import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ public class MedInventory_InFrame extends JFrame {
 
     private String barcode;
     private List<String> lotes = new ArrayList<String>();
+
+    private final DatabaseManager db = new DatabaseManager(
+            DatabaseConstants.url,
+            DatabaseConstants.user,
+            DatabaseConstants.password
+        );
 
     public MedInventory_InFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +84,7 @@ public class MedInventory_InFrame extends JFrame {
                 try {
                     if (contentPane.isAncestorOf(comboBoxLote) && contentPane.isAncestorOf(lblSelectLote) && contentPane.isAncestorOf(lblSelectLote) && contentPane.isAncestorOf(lblNewQuantity_Num)) {
                         String selectedLote = (String) comboBoxLote.getSelectedItem();
-                        DbConnection.db.updateQuantity(barcode, selectedLote, newQuantity);
+                        db.updateQuantity(barcode, selectedLote, newQuantity);
                         JOptionPane.showMessageDialog(null, "Se actualizo la cantidad correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
 
                         contentPane.remove(comboBoxLote);
@@ -137,7 +144,7 @@ public class MedInventory_InFrame extends JFrame {
                 comboBoxLote.setBounds(850, 150, 400, 50);
         
             try {
-                lotes = DbConnection.db.getLotesByBarcode(barcode);
+                lotes = db.getLotesByBarcode(barcode);
                 for (String lote : lotes) {
                     comboBoxLote.addItem(lote);
                 }
@@ -164,7 +171,7 @@ public class MedInventory_InFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         String selectedLote = (String) comboBoxLote.getSelectedItem();
                         try {
-                            lblNewQuantity_Num.setText(String.valueOf(DbConnection.db.getQuantityByBarcodeAndLote(barcode, selectedLote)));
+                            lblNewQuantity_Num.setText(String.valueOf(db.getQuantityByBarcodeAndLote(barcode, selectedLote)));
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
@@ -182,6 +189,7 @@ public class MedInventory_InFrame extends JFrame {
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                db.libCloseConnection();
                 MedInventory_MainFrame mainFrame = new MedInventory_MainFrame();
                 mainFrame.setVisible(true);
             }
