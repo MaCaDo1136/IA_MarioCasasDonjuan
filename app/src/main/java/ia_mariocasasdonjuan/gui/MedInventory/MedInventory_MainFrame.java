@@ -25,7 +25,7 @@ public class MedInventory_MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnInput = new JButton("Input");
+		JButton btnInput = new JButton("Ingreso de datos");
 		btnInput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MedInventory_InFrame input = new MedInventory_InFrame();

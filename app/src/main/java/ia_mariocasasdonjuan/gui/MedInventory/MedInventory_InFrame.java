@@ -53,11 +53,11 @@ public class MedInventory_InFrame extends JFrame {
         txtNewQuantity.setBounds(200, 250, 400, 50);
         contentPane.add(txtNewQuantity);
 
-        lblActualQuantity = new JLabel("Actual quantity: ");
+        lblActualQuantity = new JLabel("Cantidad Actual: ");
         lblActualQuantity.setBounds(200, 450, 143, 50);
         contentPane.add(lblActualQuantity);
         
-        JLabel lblInsertBarcode = new JLabel("Insert Barcode:");
+        JLabel lblInsertBarcode = new JLabel("Ingresa codigo de barras:");
         lblInsertBarcode.setBounds(67, 150, 87, 50);
         contentPane.add(lblInsertBarcode);
         
@@ -65,17 +65,17 @@ public class MedInventory_InFrame extends JFrame {
         lblNewQuantity_Num.setBounds(297, 450, 87, 50);
         contentPane.add(lblNewQuantity_Num);
         
-        JLabel lblNewQuantity = new JLabel("New Quantity:");
+        JLabel lblNewQuantity = new JLabel("Nueva Cantidad:");
         lblNewQuantity.setBounds(67, 250, 87, 50);
         contentPane.add(lblNewQuantity);
 
         
-        JLabel lblSelectLote = new JLabel("Select Lote:");
+        JLabel lblSelectLote = new JLabel("Selecciona el lote:");
         lblSelectLote.setBounds(720, 150, 87, 50);
 
         //Actions
         
-        btnUpdate = new JButton("Update");
+        btnUpdate = new JButton("actualizar");
         btnUpdate.setBounds(200, 350, 180, 50);
         btnUpdate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +100,7 @@ public class MedInventory_InFrame extends JFrame {
         });
         contentPane.add(btnUpdate);
 
-        btnCancel = new JButton("Cancel");
+        btnCancel = new JButton("Cancelar");
         btnCancel.setBounds(400, 350, 180, 50);
         btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
