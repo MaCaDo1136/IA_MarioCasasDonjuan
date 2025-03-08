@@ -112,19 +112,17 @@ public class DatabaseManager {
     //Advanced Database Manager
 
     public void updateLine(String tableName, String[] newData, String[] newValue, String refData, String refValue) {
-        for (int i = 0; i < newData.length; i++) {
-            if (newValue[i] == null) {
-                continue;
-            } else {
-                updateData(tableName, newData[i], newValue[i], refData, refValue);
-            }
-        }
+    updateLine_Recursion(tableName, newData, newValue, refData, refValue, 0);
     }
 
-    public void insertLine(DatabaseManager db, String tableName, String refData, String refValue, String newData[], String newValue[]) {
-        db.insertData(tableName, refData, refValue);
-
-        updateLine(tableName, newData, newValue, refData, refValue);
+    private void updateLine_Recursion(String tableName, String[] newData, String[] newValue, String refData, String refValue, int index) {
+    if (index >= newData.length) { // Base case
+        return;
+    }
+    if (newValue[index] != null) {
+        updateData(tableName, newData[index], newValue[index], refData, refValue);
+    }
+    updateLine_Recursion(tableName, newData, newValue, refData, refValue, index + 1); // Recursive call
     }
 
     public String returnId(String tableName, String data, String value) {
