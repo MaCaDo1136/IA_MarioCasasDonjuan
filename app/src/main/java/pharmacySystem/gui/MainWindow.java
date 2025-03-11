@@ -1,16 +1,15 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui;
+
+package pharmacySystem.gui;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import ia_mariocasasdonjuan.gui.MedExpData.MedExpData_OutFrame;
-import ia_mariocasasdonjuan.gui.MedInventory.MedInventory_MainFrame;
-import ia_mariocasasdonjuan.gui.MedLocation.MedLocation_MainFrame;
-import ia_mariocasasdonjuan.gui.MedLogFile.MedLogFile_OutFrame;
-import ia_mariocasasdonjuan.gui.MedRegister.MedRegister_InFrame;
+
+import pharmacySystem.gui.MedExpData.MedExpData_OutFrame;
+import pharmacySystem.gui.MedInventory.MedInventory_MainFrame;
+import pharmacySystem.gui.MedLocation.MedLocation_MainFrame;
+import pharmacySystem.gui.MedLogFile.MedLogFile_OutFrame;
+import pharmacySystem.gui.MedRegister.MedRegister_InFrame;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;

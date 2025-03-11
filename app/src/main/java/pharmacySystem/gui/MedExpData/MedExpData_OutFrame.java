@@ -1,7 +1,5 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedExpData;
+
+package pharmacySystem.gui.MedExpData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,10 +7,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedExpData;
-import ia_mariocasasdonjuan.gui.MainWindow;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
+import pharmacySystem.databaseLib.DatabaseManager.MedExpData;
+import pharmacySystem.gui.MainWindow;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

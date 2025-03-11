@@ -1,7 +1,5 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.Utils;
+
+package pharmacySystem.Utils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

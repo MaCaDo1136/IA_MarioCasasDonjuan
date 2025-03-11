@@ -1,12 +1,12 @@
-package ia_mariocasasdonjuan.gui.MedInventory;
+package pharmacySystem.gui.MedInventory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedInventoryData;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
+import pharmacySystem.databaseLib.DatabaseManager.MedInventoryData;
 
 import java.sql.SQLException;
 import java.util.List;

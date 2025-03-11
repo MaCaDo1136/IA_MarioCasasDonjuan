@@ -1,7 +1,5 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.Utils;
+
+package pharmacySystem.Utils;
 
 public class Constants {
     public static class DatabaseConstants {

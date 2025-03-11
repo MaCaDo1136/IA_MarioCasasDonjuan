@@ -1,14 +1,12 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedRegister;
+
+package pharmacySystem.gui.MedRegister;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
-import ia_mariocasasdonjuan.gui.MainWindow;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
+import pharmacySystem.gui.MainWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

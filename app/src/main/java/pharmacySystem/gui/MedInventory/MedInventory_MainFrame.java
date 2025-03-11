@@ -1,12 +1,11 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedInventory;
+
+package pharmacySystem.gui.MedInventory;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import ia_mariocasasdonjuan.gui.MainWindow;
+
+import pharmacySystem.gui.MainWindow;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;

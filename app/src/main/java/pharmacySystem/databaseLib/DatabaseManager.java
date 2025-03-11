@@ -1,8 +1,4 @@
-/*
- * Written by Mario Casas
- */
-
-package ia_mariocasasdonjuan.databaseLib;
+package pharmacySystem.databaseLib;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -14,13 +10,14 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Statement;
 import java.util.List;
+
+import pharmacySystem.Utils.Variables;
+
 import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-import ia_mariocasasdonjuan.Utils.Variables;
 
 public class DatabaseManager {
 

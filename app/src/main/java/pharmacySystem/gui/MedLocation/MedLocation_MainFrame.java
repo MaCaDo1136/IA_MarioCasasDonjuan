@@ -1,7 +1,5 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedLocation;
+
+package pharmacySystem.gui.MedLocation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.gui.MainWindow;
+import pharmacySystem.gui.MainWindow;
 
 public class MedLocation_MainFrame extends JFrame {
 

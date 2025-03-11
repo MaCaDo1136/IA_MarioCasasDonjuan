@@ -1,8 +1,6 @@
-/*
- * Written by Mario Casas
- */
 
-package ia_mariocasasdonjuan.databaseLib;
+
+package pharmacySystem.databaseLib;
 
 public class DataValidator {
     

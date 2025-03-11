@@ -1,15 +1,14 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedLocation;
+
+package pharmacySystem.gui.MedLogFile;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager.MedLocationData;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
+import pharmacySystem.databaseLib.DatabaseManager.MedLogFileData;
+import pharmacySystem.gui.MainWindow;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,11 +16,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MedLocation_OutFrame extends JFrame {
+public class MedLogFile_OutFrame extends JFrame {
 private JPanel contentPane;
     private JTable table;
     private DefaultTableModel tableModel;
-    private List<MedLocationData> locationDataList;
+    private List<MedLogFileData> logFileDataList;
 
     private int pageSize = 70;
     private int currentPage = 1;
@@ -33,14 +32,14 @@ private JPanel contentPane;
             DatabaseConstants.password
         );
 
-    public MedLocation_OutFrame() {
+    public MedLogFile_OutFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1330, 856);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout());
 
-        String[] columnNames = {"Nombre de la Medicina", "lote", "Fecha de Expiracion", "Cantidad", "Ubicación actual"};
+        String[] columnNames = {"id de Inventario", "Tipo de movimiento", "Cantidad", "Fecha"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setFillsViewportHeight(true);
@@ -91,8 +90,7 @@ private JPanel contentPane;
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 db.libCloseConnection();
-                MedLocation_MainFrame mainFrame = new MedLocation_MainFrame();
-                mainFrame.setVisible(true);
+                MainWindow.init();
             }
         });
 
@@ -103,7 +101,7 @@ private JPanel contentPane;
 
     private void loadData() {
         try {
-            locationDataList = db.getMedLocation();
+            logFileDataList = db.getMedLogFile();
             currentPage = 1;
             updateTable();
             updatePageInfo();
@@ -115,16 +113,15 @@ private JPanel contentPane;
     private void updateTable() {
         tableModel.setRowCount(0);
         int start = (currentPage - 1) * pageSize;
-        int end = Math.min(start + pageSize, locationDataList.size());
+        int end = Math.min(start + pageSize, logFileDataList.size());
 
         for (int i = start; i < end; i++) {
-            MedLocationData locations = locationDataList.get(i);
+            MedLogFileData logFile = logFileDataList.get(i);
             Object[] rowData = {
-                locations.getName(),
-                locations.getLote(),
-                locations.getExpDate(),
-                locations.getQuantity(),
-                locations.getActualLocation()
+                logFile.getInventoryId(),
+                logFile.getMovementType(),
+                logFile.getMovementQuantity(),
+                logFile.getDate()
             };
             tableModel.addRow(rowData);
         }
@@ -135,6 +132,6 @@ private JPanel contentPane;
     }
 
     private int getTotalPages() {
-        return (int) Math.ceil((double) locationDataList.size() / pageSize);
+        return (int) Math.ceil((double) logFileDataList.size() / pageSize);
     }
 }

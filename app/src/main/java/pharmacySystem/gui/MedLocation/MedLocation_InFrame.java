@@ -1,15 +1,13 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedLocation;
+
+package pharmacySystem.gui.MedLocation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

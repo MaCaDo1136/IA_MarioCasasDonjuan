@@ -1,13 +1,11 @@
-/*
- * Written by Mario Casas
- */
-package ia_mariocasasdonjuan.gui.MedInventory;
+
+package pharmacySystem.gui.MedInventory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ia_mariocasasdonjuan.Utils.Constants.DatabaseConstants;
-import ia_mariocasasdonjuan.databaseLib.DatabaseManager;
+import pharmacySystem.Utils.Constants.DatabaseConstants;
+import pharmacySystem.databaseLib.DatabaseManager;
 
 import java.util.List;
 import java.util.ArrayList;
